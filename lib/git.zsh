@@ -41,7 +41,11 @@ function parse_git_dirty() {
     STATUS=$(__git_prompt_git status ${FLAGS} 2> /dev/null | tail -n1)
   fi
   if [[ -n $STATUS ]]; then
-    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+    if [[ "$(git status --porcelain | wc -l)" == "$(git status --porcelain | grep -E '^\?\?' | wc -l)" ]]; then
+      echo "$ZSH_THEME_GIT_PROMPT_UNTRACKED"
+    else
+      echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+    fi
   else
     echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
   fi
